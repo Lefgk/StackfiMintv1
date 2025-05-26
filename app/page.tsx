@@ -6,13 +6,13 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useWalletClient, usePublicClient } from "wagmi";
 import React from "react";
 
-export const CONTRACT_ABI = [
+const CONTRACT_ABI = [
   "function mint(uint256 quantity) payable",
   "function totalSupply() view returns (uint256)",
   "function MAX_SUPPLY() view returns (uint256)",
   "function MINT_PRICE() view returns (uint256)",
   "function setMintEnabled(bool enabled)",
-] as const;
+];
 
 const CONTRACT_ADDRESS = process.env
   .NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
