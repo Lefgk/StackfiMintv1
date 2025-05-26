@@ -590,22 +590,6 @@ export default function Home() {
             >
               Home
             </a>
-            <a
-              href="#"
-              style={styles.navLink}
-              onMouseOver={(e: any) => (e.target.style.color = "#ffffff")}
-              onMouseOut={(e: any) => (e.target.style.color = "#9ca3af")}
-            >
-              Dashboard
-            </a>
-            <a
-              href="#"
-              style={styles.navLink}
-              onMouseOver={(e: any) => (e.target.style.color = "#ffffff")}
-              onMouseOut={(e: any) => (e.target.style.color = "#9ca3af")}
-            >
-              Governance
-            </a>
           </nav>
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <button
@@ -723,68 +707,6 @@ export default function Home() {
               {isConnected ? (
                 <div>
                   {/* Quantity Selector */}
-                  <div style={styles.quantitySection}>
-                    <label style={styles.quantityLabel}>QUANTITY</label>
-                    <div style={styles.quantityControls}>
-                      <button
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        disabled={isLoading || quantity <= 1}
-                        style={styles.quantityButton}
-                        onMouseOver={(e: any) =>
-                          !e.target.disabled &&
-                          (e.target.style.backgroundColor =
-                            "rgba(107, 114, 128, 0.8)")
-                        }
-                        onMouseOut={(e: any) =>
-                          !e.target.disabled &&
-                          (e.target.style.backgroundColor =
-                            "rgba(75, 85, 99, 0.8)")
-                        }
-                      >
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        value={quantity}
-                        onChange={(e: any) =>
-                          setQuantity(
-                            Math.max(1, Math.min(5, Number(e.target.value)))
-                          )
-                        }
-                        min={1}
-                        max={5}
-                        style={styles.quantityInput}
-                        disabled={isLoading}
-                      />
-                      <button
-                        onClick={() => setQuantity(Math.min(5, quantity + 1))}
-                        disabled={isLoading || quantity >= 5}
-                        style={styles.quantityButton}
-                        onMouseOver={(e: any) =>
-                          !e.target.disabled &&
-                          (e.target.style.backgroundColor =
-                            "rgba(107, 114, 128, 0.8)")
-                        }
-                        onMouseOut={(e: any) =>
-                          !e.target.disabled &&
-                          (e.target.style.backgroundColor =
-                            "rgba(75, 85, 99, 0.8)")
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Total Cost */}
-                  <div style={styles.totalCost}>
-                    <span style={{ color: "#9ca3af", fontWeight: "600" }}>
-                      TOTAL COST
-                    </span>
-                    <span style={{ fontSize: "1.5rem", fontWeight: "900" }}>
-                      {(quantity * parseFloat(price)).toFixed(4)} ETH
-                    </span>
-                  </div>
 
                   {/* Mint Button */}
                   <button
