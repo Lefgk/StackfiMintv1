@@ -5,17 +5,753 @@ import { parseEther, formatEther } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useWalletClient, usePublicClient } from "wagmi";
 import React from "react";
+import { base } from "viem/chains";
 
 const CONTRACT_ABI = [
-  "function mint(uint256 quantity) payable",
-  "function totalSupply() view returns (uint256)",
-  "function MAX_SUPPLY() view returns (uint256)",
-  "function MINT_PRICE() view returns (uint256)",
-  "function setMintEnabled(bool enabled)",
+  {
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "numerator",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "denominator",
+        type: "uint256",
+      },
+    ],
+    name: "ERC2981InvalidDefaultRoyalty",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+    ],
+    name: "ERC2981InvalidDefaultRoyaltyReceiver",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "numerator",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "denominator",
+        type: "uint256",
+      },
+    ],
+    name: "ERC2981InvalidTokenRoyalty",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+    ],
+    name: "ERC2981InvalidTokenRoyaltyReceiver",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ERC721EnumerableForbiddenBatchMint",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "ERC721IncorrectOwner",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "ERC721InsufficientApproval",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "approver",
+        type: "address",
+      },
+    ],
+    name: "ERC721InvalidApprover",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+    ],
+    name: "ERC721InvalidOperator",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "ERC721InvalidOwner",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+    ],
+    name: "ERC721InvalidReceiver",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "ERC721InvalidSender",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "ERC721NonexistentToken",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+    ],
+    name: "ERC721OutOfBoundsIndex",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "OwnableInvalidOwner",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "OwnableUnauthorizedAccount",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "approved",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+    ],
+    name: "ApprovalForAll",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "MAX_SUPPLY",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "approve",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "getApproved",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+    ],
+    name: "isApprovedForAll",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "mint",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "ownerOf",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "salePrice",
+        type: "uint256",
+      },
+    ],
+    name: "royaltyInfo",
+    outputs: [
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "safeTransferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "safeTransferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+    ],
+    name: "setApprovalForAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "newURI",
+        type: "string",
+      },
+    ],
+    name: "setBaseURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        internalType: "uint96",
+        name: "feeNumerator",
+        type: "uint96",
+      },
+    ],
+    name: "setRoyalty",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "interfaceId",
+        type: "bytes4",
+      },
+    ],
+    name: "supportsInterface",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+    ],
+    name: "tokenByIndex",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+    ],
+    name: "tokenOfOwnerByIndex",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "tokenURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSupply",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "transferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
-const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
+// Replace with your actual deployed contract address
+const CONTRACT_ADDRESS = "0x45dde3ba310f4abdf102f510f8f7a083c649efa9";
 
 const styles = {
   container: {
@@ -90,17 +826,6 @@ const styles = {
     borderBottom: "2px solid #3b82f6",
     paddingBottom: "0.5rem",
   },
-  buyButton: {
-    backgroundColor: "#374151",
-    color: "white",
-    padding: "0.75rem 1.25rem",
-    borderRadius: "0.5rem",
-    border: "1px solid #4b5563",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    fontSize: "0.9rem",
-    fontWeight: "500",
-  },
   main: {
     maxWidth: "90rem",
     margin: "0 auto",
@@ -155,17 +880,6 @@ const styles = {
     position: "relative" as const,
     overflow: "hidden",
   },
-  statCardGlow: {
-    position: "absolute" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background:
-      "linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%)",
-    transform: "translateX(-100%)",
-    transition: "transform 0.6s ease",
-  },
   statLabel: {
     fontSize: "0.875rem",
     color: "#9ca3af",
@@ -216,7 +930,7 @@ const styles = {
     width: "10rem",
     height: "10rem",
     margin: "0 auto 2rem",
-    background: "linear-gradient(135deg, #f97316, #ea580c, #dc2626)",
+    // background: "linear-gradient(135deg, #f97316, #ea580c, #dc2626)",
     borderRadius: "1rem",
     display: "flex",
     alignItems: "center",
@@ -238,65 +952,6 @@ const styles = {
       "conic-gradient(from 0deg, transparent, rgba(249, 115, 22, 0.3), transparent)",
     animation: "rotate 4s linear infinite",
   },
-  quantitySection: {
-    marginBottom: "2rem",
-  },
-  quantityLabel: {
-    display: "block",
-    fontSize: "0.875rem",
-    color: "#9ca3af",
-    marginBottom: "1rem",
-    fontWeight: "600",
-    letterSpacing: "0.05em",
-  },
-  quantityControls: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "rgba(55, 65, 81, 0.8)",
-    borderRadius: "1rem",
-    padding: "1.5rem",
-    border: "1px solid rgba(75, 85, 99, 0.5)",
-    backdropFilter: "blur(10px)",
-  },
-  quantityButton: {
-    width: "3rem",
-    height: "3rem",
-    borderRadius: "50%",
-    backgroundColor: "rgba(75, 85, 99, 0.8)",
-    border: "1px solid rgba(107, 114, 128, 0.5)",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    fontSize: "1.25rem",
-    fontWeight: "bold",
-    transition: "all 0.3s ease",
-    backdropFilter: "blur(10px)",
-  },
-  quantityInput: {
-    width: "6rem",
-    height: "4rem",
-    textAlign: "center" as const,
-    backgroundColor: "transparent",
-    border: "none",
-    color: "white",
-    fontWeight: "900",
-    fontSize: "1.5rem",
-    outline: "none",
-  },
-  totalCost: {
-    backgroundColor: "rgba(55, 65, 81, 0.8)",
-    borderRadius: "1rem",
-    padding: "1.5rem",
-    border: "1px solid rgba(75, 85, 99, 0.5)",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "2rem",
-    backdropFilter: "blur(10px)",
-  },
   mintButton: {
     width: "100%",
     padding: "1.25rem 2rem",
@@ -312,15 +967,10 @@ const styles = {
     overflow: "hidden",
     letterSpacing: "0.05em",
   },
-  mintButtonGlow: {
-    position: "absolute" as const,
-    top: 0,
-    left: "-100%",
-    width: "100%",
-    height: "100%",
-    background:
-      "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)",
-    transition: "left 0.5s ease",
+  mintButtonDisabled: {
+    background: "rgba(75, 85, 99, 0.8)",
+    cursor: "not-allowed",
+    opacity: 0.7,
   },
   status: {
     marginTop: "2rem",
@@ -333,53 +983,6 @@ const styles = {
   connectSection: {
     textAlign: "center" as const,
     padding: "2rem",
-  },
-  pillarsSection: {
-    marginTop: "6rem",
-    textAlign: "center" as const,
-  },
-  pillarsTitle: {
-    fontSize: "3rem",
-    fontWeight: "900",
-    marginBottom: "1.5rem",
-    lineHeight: "1.2",
-  },
-  pillarsDescription: {
-    color: "#d1d5db",
-    fontSize: "1.125rem",
-    marginBottom: "4rem",
-    maxWidth: "64rem",
-    margin: "0 auto 4rem",
-    lineHeight: "1.7",
-  },
-  pillarsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-    gap: "2rem",
-    maxWidth: "80rem",
-    margin: "0 auto",
-  },
-  pillarCard: {
-    backgroundColor: "rgba(17, 24, 39, 0.8)",
-    border: "1px solid rgba(55, 65, 81, 0.5)",
-    borderRadius: "1.5rem",
-    padding: "2.5rem",
-    backdropFilter: "blur(10px)",
-    transition: "all 0.3s ease",
-    cursor: "pointer",
-    position: "relative" as const,
-    overflow: "hidden",
-  },
-  pillarIcon: {
-    width: "5rem",
-    height: "5rem",
-    borderRadius: "1rem",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "1.5rem",
-    margin: "0 auto 1.5rem",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
   },
   progressSection: {
     marginTop: "5rem",
@@ -414,6 +1017,17 @@ const styles = {
     background:
       "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)",
     animation: "shimmer 2s infinite",
+  },
+  soldOutBadge: {
+    backgroundColor: "rgba(220, 38, 38, 0.2)",
+    border: "1px solid rgba(220, 38, 38, 0.5)",
+    color: "#fca5a5",
+    padding: "0.75rem 1.5rem",
+    borderRadius: "0.75rem",
+    fontSize: "1rem",
+    fontWeight: "700",
+    textAlign: "center" as const,
+    marginBottom: "1.5rem",
   },
 };
 
@@ -452,23 +1066,24 @@ const keyframes = `
 `;
 
 export default function Home() {
-  const [quantity, setQuantity] = useState(1);
   const [status, setStatus] = useState("");
   const [supply, setSupply] = useState(0);
-  const [maxSupply, setMaxSupply] = useState(0);
-  const [price, setPrice] = useState("0");
+  const [maxSupply, setMaxSupply] = useState(500); // Default from contract
+  const [remaining, setRemaining] = useState(500);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSoldOut, setIsSoldOut] = useState(false);
 
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
 
+  // Fetch contract data
   useEffect(() => {
-    if (!isConnected || !publicClient) return;
-
     const fetchContractData = async () => {
+      if (!publicClient) return;
+
       try {
-        const [totalSupply, maxSupplyData, mintPrice] = await Promise.all([
+        const [totalSupply, maxSupplyData] = await Promise.all([
           publicClient.readContract({
             address: CONTRACT_ADDRESS,
             abi: CONTRACT_ABI,
@@ -479,16 +1094,16 @@ export default function Home() {
             abi: CONTRACT_ABI,
             functionName: "MAX_SUPPLY",
           }),
-          publicClient.readContract({
-            address: CONTRACT_ADDRESS,
-            abi: CONTRACT_ABI,
-            functionName: "MINT_PRICE",
-          }),
         ]);
 
-        setSupply(Number(totalSupply));
-        setMaxSupply(Number(maxSupplyData));
-        setPrice(formatEther(mintPrice as bigint));
+        const currentSupply = Number(totalSupply);
+        const maxSupplyNum = Number(maxSupplyData);
+        const remainingSupply = maxSupplyNum - currentSupply;
+
+        setSupply(currentSupply);
+        setMaxSupply(maxSupplyNum);
+        setRemaining(remainingSupply);
+        setIsSoldOut(remainingSupply <= 0);
       } catch (error) {
         console.error("Error fetching contract data:", error);
         setStatus("Error loading contract data");
@@ -496,7 +1111,11 @@ export default function Home() {
     };
 
     fetchContractData();
-  }, [isConnected, publicClient]);
+
+    // Set up interval to refresh data every 30 seconds
+    const interval = setInterval(fetchContractData, 30000);
+    return () => clearInterval(interval);
+  }, [publicClient]);
 
   const handleMint = async () => {
     if (!walletClient || !address) {
@@ -504,39 +1123,57 @@ export default function Home() {
       return;
     }
 
+    if (isSoldOut) {
+      setStatus("Sorry, all NFTs have been minted!");
+      return;
+    }
+
     setIsLoading(true);
     setStatus("Preparing transaction...");
 
     try {
-      const mintValue = parseEther((quantity * parseFloat(price)).toString());
-
-      // const hash = await walletClient.writeContract({
-      //   address: CONTRACT_ADDRESS,
-      //   abi: CONTRACT_ABI,
-      //   functionName: "mint",
-      //   args: [BigInt(quantity)],
-      //   value: mintValue,
-      // });
+      const hash = await walletClient.writeContract({
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
+        functionName: "mint",
+        args: [],
+        value: BigInt(0), // Free mint
+        chain: base,
+        account: address,
+      });
 
       setStatus("Transaction submitted. Waiting for confirmation...");
 
-      // if (publicClient) {
-      //   const receipt = await publicClient.waitForTransactionReceipt({ hash });
-      //   if (receipt.status === "success") {
-      //     setStatus("Mint successful! 🎉");
-      //     const newSupply = await publicClient.readContract({
-      //       address: CONTRACT_ADDRESS,
-      //       abi: CONTRACT_ABI,
-      //       functionName: "totalSupply",
-      //     });
-      //     setSupply(Number(newSupply));
-      //   } else {
-      //     setStatus("Transaction failed");
-      //   }
-      // }
+      if (publicClient) {
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        if (receipt.status === "success") {
+          setStatus("Mint successful! 🎉");
+
+          // Refresh contract data
+          const newSupply = await publicClient.readContract({
+            address: CONTRACT_ADDRESS,
+            abi: CONTRACT_ABI,
+            functionName: "totalSupply",
+          });
+
+          const currentSupply = Number(newSupply);
+          const remainingSupply = maxSupply - currentSupply;
+
+          setSupply(currentSupply);
+          setRemaining(remainingSupply);
+          setIsSoldOut(remainingSupply <= 0);
+        } else {
+          setStatus("Transaction failed");
+        }
+      }
     } catch (error: any) {
       console.error("Mint error:", error);
-      setStatus(`Mint failed: ${error.shortMessage || error.message}`);
+      if (error.message?.includes("Max supply reached")) {
+        setStatus("Sorry, all NFTs have been minted!");
+        setIsSoldOut(true);
+      } else {
+        setStatus(`Mint failed: ${error.shortMessage || error.message}`);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -567,6 +1204,8 @@ export default function Home() {
     }
   };
 
+  const progressPercentage = maxSupply > 0 ? (supply / maxSupply) * 100 : 0;
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: keyframes }} />
@@ -576,10 +1215,16 @@ export default function Home() {
         {/* Header */}
         <header style={styles.header}>
           <div style={styles.logo}>
-            <div style={styles.logoIcon}>
-              <div style={styles.logoDiamond}></div>
-            </div>
-            <h1 style={{ fontSize: "1.5rem", fontWeight: "800" }}>StackFi</h1>
+            <img
+              src="/stackLogo.png"
+              alt="StackFi Logo"
+              style={{
+                width: "8.5rem",
+                height: "5.5rem",
+                borderRadius: "0.25rem",
+                boxShadow: "0 4px 20px rgba(255, 255, 255, 0.1)",
+              }}
+            />
           </div>
           <nav style={styles.nav}>
             <a
@@ -592,18 +1237,6 @@ export default function Home() {
             </a>
           </nav>
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <button
-              style={styles.buyButton}
-              onMouseOver={(e: any) =>
-                (e.target.style.backgroundColor = "#4b5563")
-              }
-              onMouseOut={(e: any) =>
-                (e.target.style.backgroundColor = "#374151")
-              }
-            >
-              <div>Buy StackFi</div>
-              <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>$100</div>
-            </button>
             <ConnectButton />
           </div>
         </header>
@@ -633,12 +1266,12 @@ export default function Home() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <div style={styles.statCardGlow}></div>
                 <div style={styles.statLabel}>TOTAL MINTED</div>
                 <div style={{ ...styles.statValue, color: "#f97316" }}>
                   {supply.toLocaleString()}
                 </div>
               </div>
+
               <div
                 style={styles.statCard}
                 onMouseOver={(e: any) => {
@@ -651,11 +1284,17 @@ export default function Home() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <div style={styles.statLabel}>MAX SUPPLY</div>
-                <div style={{ ...styles.statValue, color: "#10b981" }}>
-                  {maxSupply.toLocaleString()}
+                <div style={styles.statLabel}>REMAINING</div>
+                <div
+                  style={{
+                    ...styles.statValue,
+                    color: remaining > 0 ? "#10b981" : "#ef4444",
+                  }}
+                >
+                  {remaining.toLocaleString()}
                 </div>
               </div>
+
               <div
                 style={styles.statCard}
                 onMouseOver={(e: any) => {
@@ -668,11 +1307,12 @@ export default function Home() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <div style={styles.statLabel}>MINT PRICE</div>
+                <div style={styles.statLabel}>MAX SUPPLY</div>
                 <div style={{ ...styles.statValue, color: "#3b82f6" }}>
-                  {price} ETH
+                  {maxSupply.toLocaleString()}
                 </div>
               </div>
+
               <div
                 style={styles.statCard}
                 onMouseOver={(e: any) => {
@@ -685,12 +1325,9 @@ export default function Home() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <div style={styles.statLabel}>PROGRESS</div>
-                <div style={{ ...styles.statValue, color: "white" }}>
-                  {supply > 0 && maxSupply > 0
-                    ? Math.round((supply / maxSupply) * 100)
-                    : 0}
-                  %
+                <div style={styles.statLabel}>MINT PRICE</div>
+                <div style={{ ...styles.statValue, color: "#10b981" }}>
+                  FREE
                 </div>
               </div>
             </div>
@@ -699,41 +1336,59 @@ export default function Home() {
             <div style={styles.mintCard}>
               <div style={styles.mintCardBorder}></div>
               <h2 style={styles.mintTitle}>MINT GENESIS NFT</h2>
+
               <div style={styles.nftPreview}>
                 <div style={styles.nftGlow}></div>
-                <span style={{ position: "relative", zIndex: 1 }}>NFT</span>
+                <div style={styles.logo}>
+                  <img
+                    src="/nft.png"
+                    alt="StackFi Logo"
+                    style={{
+                      width: "8.5rem",
+                      height: "5.5rem",
+                      borderRadius: "0.25rem",
+                      boxShadow: "0 4px 20px rgba(255, 255, 255, 0.1)",
+                    }}
+                  />
+                </div>
               </div>
+
+              {isSoldOut && (
+                <div style={styles.soldOutBadge}>
+                  🔥 SOLD OUT - All {maxSupply} NFTs Minted!
+                </div>
+              )}
 
               {isConnected ? (
                 <div>
-                  {/* Quantity Selector */}
-
-                  {/* Mint Button */}
                   <button
                     onClick={handleMint}
-                    disabled={isLoading || !CONTRACT_ADDRESS}
+                    disabled={isLoading || isSoldOut}
                     style={{
                       ...styles.mintButton,
-                      ...(isLoading
-                        ? { opacity: 0.7, cursor: "not-allowed" }
+                      ...(isLoading || isSoldOut
+                        ? styles.mintButtonDisabled
                         : {}),
                     }}
                     onMouseOver={(e: any) => {
-                      if (!isLoading) {
+                      if (!isLoading && !isSoldOut) {
                         e.target.style.transform = "translateY(-2px)";
                         e.target.style.boxShadow =
                           "0 20px 40px rgba(37, 99, 235, 0.4)";
                       }
                     }}
                     onMouseOut={(e: any) => {
-                      if (!isLoading) {
+                      if (!isLoading && !isSoldOut) {
                         e.target.style.transform = "translateY(0)";
                         e.target.style.boxShadow = "none";
                       }
                     }}
                   >
-                    <div style={styles.mintButtonGlow}></div>
-                    {isLoading ? "MINTING..." : "MINT NFT"}
+                    {isLoading
+                      ? "MINTING..."
+                      : isSoldOut
+                      ? "SOLD OUT"
+                      : "MINT FREE NFT"}
                   </button>
                 </div>
               ) : (
@@ -771,52 +1426,83 @@ export default function Home() {
           </div>
 
           {/* Progress Bar */}
-          {supply > 0 && maxSupply > 0 && (
-            <div style={styles.progressSection}>
-              <div
+          <div style={styles.progressSection}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "1.5rem",
+              }}
+            >
+              <h3 style={{ fontSize: "1.5rem", fontWeight: "800", margin: 0 }}>
+                MINT PROGRESS
+              </h3>
+              <span
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "1.5rem",
+                  color: "#9ca3af",
+                  fontSize: "1.125rem",
+                  fontWeight: "600",
                 }}
               >
-                <h3
-                  style={{ fontSize: "1.5rem", fontWeight: "800", margin: 0 }}
-                >
-                  MINT PROGRESS
-                </h3>
-                <span
-                  style={{
-                    color: "#9ca3af",
-                    fontSize: "1.125rem",
-                    fontWeight: "600",
-                  }}
-                >
-                  {supply.toLocaleString()} / {maxSupply.toLocaleString()} (
-                  {Math.round((supply / maxSupply) * 100)}%)
-                </span>
-              </div>
-              <div style={styles.progressBar}>
-                <div
-                  style={{
-                    ...styles.progressFill,
-                    width: `${(supply / maxSupply) * 100}%`,
-                  }}
-                >
-                  <div style={styles.progressGlow}></div>
-                </div>
+                {supply.toLocaleString()} / {maxSupply.toLocaleString()} (
+                {Math.round(progressPercentage)}%)
+              </span>
+            </div>
+            <div style={styles.progressBar}>
+              <div
+                style={{
+                  ...styles.progressFill,
+                  width: `${progressPercentage}%`,
+                }}
+              >
+                <div style={styles.progressGlow}></div>
               </div>
             </div>
-          )}
+
+            {remaining > 0 && (
+              <div
+                style={{
+                  textAlign: "center",
+                  marginTop: "1rem",
+                  color: "#10b981",
+                  fontSize: "1.125rem",
+                  fontWeight: "600",
+                }}
+              >
+                {remaining} NFTs remaining
+              </div>
+            )}
+          </div>
 
           {/* Features Section */}
-          <div style={styles.pillarsSection}>
-            <h2 style={styles.pillarsTitle}>
+          <div
+            style={{
+              marginTop: "6rem",
+              textAlign: "center" as const,
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "3rem",
+                fontWeight: "900",
+                marginBottom: "1.5rem",
+                lineHeight: "1.2",
+              }}
+            >
               <span style={{ color: "white" }}>3 PILLARS OF </span>
               <span style={{ color: "#f97316" }}>GENESIS UTILITY</span>
             </h2>
-            <p style={styles.pillarsDescription}>
+            <p
+              style={{
+                color: "#d1d5db",
+                fontSize: "1.125rem",
+                marginBottom: "4rem",
+                maxWidth: "64rem",
+                margin: "0 auto 4rem",
+                lineHeight: "1.7",
+              }}
+            >
               StackFi's Genesis NFTs intelligently unlock exclusive features
               across DeFi protocols and NFT marketplaces. By holding Genesis
               NFTs, you gain access to advanced leverage strategies, governance
@@ -824,9 +1510,27 @@ export default function Home() {
               efficiency.
             </p>
 
-            <div style={styles.pillarsGrid}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+                gap: "2rem",
+                maxWidth: "80rem",
+                margin: "0 auto",
+              }}
+            >
               <div
-                style={styles.pillarCard}
+                style={{
+                  backgroundColor: "rgba(17, 24, 39, 0.8)",
+                  border: "1px solid rgba(55, 65, 81, 0.5)",
+                  borderRadius: "1.5rem",
+                  padding: "2.5rem",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                  position: "relative" as const,
+                  overflow: "hidden",
+                }}
                 onMouseOver={(e: any) => {
                   e.currentTarget.style.transform = "translateY(-10px)";
                   e.currentTarget.style.boxShadow =
@@ -840,7 +1544,18 @@ export default function Home() {
                 }}
               >
                 <div
-                  style={{ ...styles.pillarIcon, backgroundColor: "#ea580c" }}
+                  style={{
+                    width: "5rem",
+                    height: "5rem",
+                    borderRadius: "1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "1.5rem",
+                    margin: "0 auto 1.5rem",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+                    backgroundColor: "#ea580c",
+                  }}
                 >
                   <div
                     style={{
@@ -887,7 +1602,17 @@ export default function Home() {
               </div>
 
               <div
-                style={styles.pillarCard}
+                style={{
+                  backgroundColor: "rgba(17, 24, 39, 0.8)",
+                  border: "1px solid rgba(55, 65, 81, 0.5)",
+                  borderRadius: "1.5rem",
+                  padding: "2.5rem",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                  position: "relative" as const,
+                  overflow: "hidden",
+                }}
                 onMouseOver={(e: any) => {
                   e.currentTarget.style.transform = "translateY(-10px)";
                   e.currentTarget.style.boxShadow =
@@ -901,7 +1626,18 @@ export default function Home() {
                 }}
               >
                 <div
-                  style={{ ...styles.pillarIcon, backgroundColor: "#1d4ed8" }}
+                  style={{
+                    width: "5rem",
+                    height: "5rem",
+                    borderRadius: "1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "1.5rem",
+                    margin: "0 auto 1.5rem",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+                    backgroundColor: "#1d4ed8",
+                  }}
                 >
                   <div
                     style={{
@@ -947,7 +1683,17 @@ export default function Home() {
               </div>
 
               <div
-                style={styles.pillarCard}
+                style={{
+                  backgroundColor: "rgba(17, 24, 39, 0.8)",
+                  border: "1px solid rgba(55, 65, 81, 0.5)",
+                  borderRadius: "1.5rem",
+                  padding: "2.5rem",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                  position: "relative" as const,
+                  overflow: "hidden",
+                }}
                 onMouseOver={(e: any) => {
                   e.currentTarget.style.transform = "translateY(-10px)";
                   e.currentTarget.style.boxShadow =
@@ -961,7 +1707,18 @@ export default function Home() {
                 }}
               >
                 <div
-                  style={{ ...styles.pillarIcon, backgroundColor: "#059669" }}
+                  style={{
+                    width: "5rem",
+                    height: "5rem",
+                    borderRadius: "1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "1.5rem",
+                    margin: "0 auto 1.5rem",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+                    backgroundColor: "#059669",
+                  }}
                 >
                   <div
                     style={{
