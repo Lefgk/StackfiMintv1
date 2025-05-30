@@ -1244,7 +1244,7 @@ export default function Home() {
         <main style={styles.main}>
           {/* Hero Section */}
           <div style={styles.heroSection}>
-            <h1 style={styles.heroTitle}>GENESIS NFT MINT</h1>
+            <h1 style={styles.heroTitle}>stackfi NFT MINT</h1>
             <p style={styles.heroDescription}>
               Unlock exclusive access to StackFi's composable DeFi ecosystem
               with advanced NFT utilities and governance rights across protocols
@@ -1335,7 +1335,7 @@ export default function Home() {
             {/* Right Side - Mint Interface */}
             <div style={styles.mintCard}>
               <div style={styles.mintCardBorder}></div>
-              <h2 style={styles.mintTitle}>MINT GENESIS NFT</h2>
+              <h2 style={styles.mintTitle}>MINT stackfi NFT</h2>
 
               <div style={styles.nftPreview}>
                 <div style={styles.nftGlow}></div>
@@ -1491,7 +1491,7 @@ export default function Home() {
               }}
             >
               <span style={{ color: "white" }}>3 PILLARS OF </span>
-              <span style={{ color: "#f97316" }}>GENESIS UTILITY</span>
+              <span style={{ color: "#f97316" }}>stackfi UTILITY</span>
             </h2>
             <p
               style={{
@@ -1503,11 +1503,10 @@ export default function Home() {
                 lineHeight: "1.7",
               }}
             >
-              StackFi's Genesis NFTs intelligently unlock exclusive features
-              across DeFi protocols and NFT marketplaces. By holding Genesis
-              NFTs, you gain access to advanced leverage strategies, governance
-              rights, and premium platform features with enhanced capital
-              efficiency.
+              StackFi's NFTs intelligently unlock exclusive features across DeFi
+              protocols and NFT marketplaces. By holding stackfi NFTs, you gain
+              access to advanced leverage strategies, governance rights, and
+              premium platform features with enhanced capital efficiency.
             </p>
 
             <div
@@ -1669,7 +1668,7 @@ export default function Home() {
                   }}
                 >
                   Access exclusive leverage strategies with enhanced capital
-                  efficiency up to 15x
+                  efficiency up to 10x
                 </p>
                 <p
                   style={{
@@ -1750,8 +1749,7 @@ export default function Home() {
                     lineHeight: "1.6",
                   }}
                 >
-                  Earn additional rewards through NFT staking and protocol fee
-                  sharing
+                  Earn additional rewards through protocol fee sharing
                 </p>
                 <p
                   style={{
@@ -1859,7 +1857,7 @@ export default function Home() {
                     lineHeight: "1.6",
                   }}
                 >
-                  Enhanced yield farming and staking rewards for NFT holders
+                  Enhanced yield farming for NFT holders
                 </p>
               </div>
               <div>
