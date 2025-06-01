@@ -9,73 +9,27 @@ import { base } from "viem/chains";
 
 const CONTRACT_ABI = [
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "approve",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     stateMutability: "nonpayable",
     type: "constructor",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "numerator",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "denominator",
-        type: "uint256",
-      },
-    ],
-    name: "ERC2981InvalidDefaultRoyalty",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-    ],
-    name: "ERC2981InvalidDefaultRoyaltyReceiver",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "numerator",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "denominator",
-        type: "uint256",
-      },
-    ],
-    name: "ERC2981InvalidTokenRoyalty",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-    ],
-    name: "ERC2981InvalidTokenRoyaltyReceiver",
-    type: "error",
   },
   {
     inputs: [],
@@ -293,176 +247,6 @@ const CONTRACT_ABI = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "Transfer",
-    type: "event",
-  },
-  {
-    inputs: [],
-    name: "MAX_SUPPLY",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "approve",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-    ],
-    name: "balanceOf",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "getApproved",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-    ],
-    name: "isApprovedForAll",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "mint",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "ownerOf",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
@@ -470,32 +254,16 @@ const CONTRACT_ABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "salePrice",
-        type: "uint256",
-      },
-    ],
-    name: "royaltyInfo",
+    inputs: [],
+    name: "safeMint",
     outputs: [
       {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
         internalType: "uint256",
-        name: "amount",
+        name: "",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -571,7 +339,7 @@ const CONTRACT_ABI = [
     inputs: [
       {
         internalType: "string",
-        name: "newURI",
+        name: "baseURI",
         type: "string",
       },
     ],
@@ -581,21 +349,229 @@ const CONTRACT_ABI = [
     type: "function",
   },
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: true,
         internalType: "address",
-        name: "receiver",
+        name: "from",
         type: "address",
       },
       {
-        internalType: "uint96",
-        name: "feeNumerator",
-        type: "uint96",
+        indexed: true,
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
       },
     ],
-    name: "setRoyalty",
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "transferFrom",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "_baseTokenURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "balanceOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "getApproved",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getRemainingSupply",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "hasMinted",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+    ],
+    name: "isApprovedForAll",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "MAX_SUPPLY",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "ownerOf",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -705,53 +681,10 @@ const CONTRACT_ABI = [
     stateMutability: "view",
     type: "function",
   },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "transferFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
 ];
 
 // Replace with your actual deployed contract address
-const CONTRACT_ADDRESS = "0x45dde3ba310f4abdf102f510f8f7a083c649efa9";
+const CONTRACT_ADDRESS = "0x62aDdE8200084C5C4932B29A266163246B4941CA";
 
 const styles = {
   container: {
@@ -1135,7 +1068,7 @@ export default function Home() {
       const hash = await walletClient.writeContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
-        functionName: "mint",
+        functionName: "safeMint",
         args: [],
         value: BigInt(0), // Free mint
         chain: base,
@@ -1244,7 +1177,7 @@ export default function Home() {
         <main style={styles.main}>
           {/* Hero Section */}
           <div style={styles.heroSection}>
-            <h1 style={styles.heroTitle}>stackfi NFT MINT</h1>
+            <h1 style={styles.heroTitle}>StackFi NFT MINT</h1>
             <p style={styles.heroDescription}>
               Unlock exclusive access to StackFi's composable DeFi ecosystem
               with advanced NFT utilities and governance rights across protocols
@@ -1335,7 +1268,7 @@ export default function Home() {
             {/* Right Side - Mint Interface */}
             <div style={styles.mintCard}>
               <div style={styles.mintCardBorder}></div>
-              <h2 style={styles.mintTitle}>MINT stackfi NFT</h2>
+              <h2 style={styles.mintTitle}>MINT StackFi NFT</h2>
 
               <div style={styles.nftPreview}>
                 <div style={styles.nftGlow}></div>
@@ -1491,7 +1424,7 @@ export default function Home() {
               }}
             >
               <span style={{ color: "white" }}>3 PILLARS OF </span>
-              <span style={{ color: "#f97316" }}>stackfi UTILITY</span>
+              <span style={{ color: "#f97316" }}>StackFi UTILITY</span>
             </h2>
             <p
               style={{
@@ -1504,7 +1437,7 @@ export default function Home() {
               }}
             >
               StackFi's NFTs intelligently unlock exclusive features across DeFi
-              protocols and NFT marketplaces. By holding stackfi NFTs, you gain
+              protocols and NFT marketplaces. By holding StackFi NFTs, you gain
               access to advanced leverage strategies, governance rights, and
               premium platform features with enhanced capital efficiency.
             </p>
@@ -1926,7 +1859,7 @@ export default function Home() {
               }}
             >
               <a
-                href="https://twitter.com/stackfi"
+                href="https://twitter.com/StackFi"
                 style={{
                   color: "#9ca3af",
                   textDecoration: "none",
@@ -1938,7 +1871,7 @@ export default function Home() {
                 Twitter
               </a>
               <a
-                href="https://t.me/stackfi"
+                href="https://t.me/StackFi"
                 style={{
                   color: "#9ca3af",
                   textDecoration: "none",
@@ -1950,7 +1883,7 @@ export default function Home() {
                 Telegram
               </a>
               <a
-                href="https://discord.gg/stackfi"
+                href="https://discord.gg/StackFi"
                 style={{
                   color: "#9ca3af",
                   textDecoration: "none",
