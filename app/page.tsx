@@ -956,11 +956,12 @@ const styles = {
     margin: "0 auto 3rem",
   },
   mainGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
     gap: "4rem",
+
     alignItems: "start",
     marginBottom: "5rem",
+    width: "60%", // Set width to 50%
+    margin: "0 auto 5rem auto", // Center horizontally, keep bottom margin
   },
   statsSection: {
     display: "grid",
@@ -1205,7 +1206,24 @@ export default function Home() {
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
+  const useIsMobile = () => {
+    const [isMobile, setIsMobile] = useState(false);
 
+    useEffect(() => {
+      const checkIsMobile = () => {
+        setIsMobile(window.innerWidth <= 768);
+      };
+
+      checkIsMobile();
+      window.addEventListener("resize", checkIsMobile);
+      return () => window.removeEventListener("resize", checkIsMobile);
+    }, []);
+
+    return isMobile;
+  };
+
+  // Then in your component, add this line after your other useState declarations:
+  const isMobile = useIsMobile();
   // Check if user is whitelisted
   useEffect(() => {
     if (address) {
@@ -1461,52 +1479,49 @@ export default function Home() {
               Each whitelisted address can mint exactly 1 NFT.
             </p>
           </div>
+          <div style={styles.statsSection}>
+            <div
+              style={styles.statCard}
+              onMouseOver={(e: any) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow =
+                  "0 25px 50px rgba(249, 115, 22, 0.15)";
+              }}
+              onMouseOut={(e: any) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <div style={styles.statLabel}>TOTAL MINTED</div>
+              <div style={{ ...styles.statValue, color: "#f97316" }}>
+                {supply.toLocaleString()}
+              </div>
+            </div>
 
-          <div style={styles.mainGrid}>
-            {/* Left Side - Stats */}
-            <div style={styles.statsSection}>
+            <div
+              style={styles.statCard}
+              onMouseOver={(e: any) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow =
+                  "0 25px 50px rgba(16, 185, 129, 0.15)";
+              }}
+              onMouseOut={(e: any) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <div style={styles.statLabel}>REMAINING</div>
               <div
-                style={styles.statCard}
-                onMouseOver={(e: any) => {
-                  e.currentTarget.style.transform = "translateY(-5px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 25px 50px rgba(249, 115, 22, 0.15)";
-                }}
-                onMouseOut={(e: any) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "none";
+                style={{
+                  ...styles.statValue,
+                  color: remaining > 0 ? "#10b981" : "#ef4444",
                 }}
               >
-                <div style={styles.statLabel}>TOTAL MINTED</div>
-                <div style={{ ...styles.statValue, color: "#f97316" }}>
-                  {supply.toLocaleString()}
-                </div>
+                {remaining.toLocaleString()}
               </div>
+            </div>
 
-              <div
-                style={styles.statCard}
-                onMouseOver={(e: any) => {
-                  e.currentTarget.style.transform = "translateY(-5px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 25px 50px rgba(16, 185, 129, 0.15)";
-                }}
-                onMouseOut={(e: any) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              >
-                <div style={styles.statLabel}>REMAINING</div>
-                <div
-                  style={{
-                    ...styles.statValue,
-                    color: remaining > 0 ? "#10b981" : "#ef4444",
-                  }}
-                >
-                  {remaining.toLocaleString()}
-                </div>
-              </div>
-
-              {/* <div
+            {/* <div
                 style={styles.statCard}
                 onMouseOver={(e: any) => {
                   e.currentTarget.style.transform = "translateY(-5px)";
@@ -1541,22 +1556,42 @@ export default function Home() {
                   FREE
                 </div>
               </div> */}
-            </div>
+          </div>
+          <div style={styles.mainGrid}>
+            {/* Left Side - Stats */}
 
             {/* Right Side - Mint Interface */}
-            <div style={styles.mintCard}>
+            <div
+              style={{
+                ...styles.mintCard,
+                padding: isMobile ? "1.5rem" : "2.5rem",
+              }}
+            >
               <div style={styles.mintCardBorder}></div>
-              <h2 style={styles.mintTitle}>WHITELIST MINT</h2>
+              <h2
+                style={{
+                  ...styles.mintTitle,
+                  fontSize: isMobile ? "1.5rem" : "1.75rem",
+                }}
+              >
+                WHITELIST MINT
+              </h2>
 
-              <div style={styles.nftPreview}>
+              <div
+                style={{
+                  ...styles.nftPreview,
+                  width: isMobile ? "8rem" : "10rem",
+                  height: isMobile ? "8rem" : "10rem",
+                }}
+              >
                 <div style={styles.nftGlow}></div>
                 <div style={styles.logo}>
                   <img
                     src="/nft.png"
                     alt="StackFi NFT"
                     style={{
-                      width: "8.5rem",
-                      height: "5.5rem",
+                      width: isMobile ? "6rem" : "8.5rem",
+                      height: isMobile ? "3.5rem" : "5.5rem",
                       borderRadius: "0.25rem",
                       boxShadow: "0 4px 20px rgba(255, 255, 255, 0.1)",
                     }}
@@ -1568,46 +1603,63 @@ export default function Home() {
               {isConnected && address && (
                 <>
                   {isWhitelisted ? (
-                    <div style={styles.whitelistBadge}>
+                    <div
+                      style={{
+                        ...styles.whitelistBadge,
+                        fontSize: isMobile ? "0.9rem" : "1rem",
+                        padding: isMobile ? "0.6rem 1rem" : "0.75rem 1.5rem",
+                      }}
+                    >
                       ✅ WHITELISTED - You can mint!
                     </div>
                   ) : (
-                    <div style={styles.notWhitelistedBadge}>
+                    <div
+                      style={{
+                        ...styles.notWhitelistedBadge,
+                        fontSize: isMobile ? "0.9rem" : "1rem",
+                        padding: isMobile ? "0.6rem 1rem" : "0.75rem 1.5rem",
+                      }}
+                    >
                       ❌ NOT WHITELISTED - Address not eligible
                     </div>
                   )}
                 </>
               )}
+
               {isConnected && address && (
                 <div
                   style={{
                     backgroundColor: "rgba(75, 85, 99, 0.2)",
                     border: "1px solid rgba(75, 85, 99, 0.5)",
                     borderRadius: "0.75rem",
-                    padding: "1rem",
-                    marginBottom: "1.5rem",
+                    padding: isMobile ? "0.75rem" : "1rem",
+                    marginBottom: isMobile ? "1rem" : "1.5rem",
                     textAlign: "center",
                   }}
                 >
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "1rem",
+                      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                      gap: isMobile ? "0.75rem" : "1rem",
                       fontSize: "0.875rem",
                       color: "#d1d5db",
                     }}
                   >
                     <div>
                       <div
-                        style={{ color: "#9ca3af", marginBottom: "0.25rem" }}
+                        style={{
+                          color: "#9ca3af",
+                          marginBottom: "0.25rem",
+                          fontSize: isMobile ? "0.8rem" : "0.875rem",
+                        }}
                       >
                         Your Balance
                       </div>
                       <div
                         style={{
                           fontWeight: "700",
-                          fontSize: "1.125rem",
+                          fontSize: isMobile ? "1rem" : "1.125rem",
                           color: userBalance > 0 ? "#10b981" : "#6b7280",
                         }}
                       >
@@ -1616,14 +1668,18 @@ export default function Home() {
                     </div>
                     <div>
                       <div
-                        style={{ color: "#9ca3af", marginBottom: "0.25rem" }}
+                        style={{
+                          color: "#9ca3af",
+                          marginBottom: "0.25rem",
+                          fontSize: isMobile ? "0.8rem" : "0.875rem",
+                        }}
                       >
                         Mint Status
                       </div>
                       <div
                         style={{
                           fontWeight: "700",
-                          fontSize: "1.125rem",
+                          fontSize: isMobile ? "1rem" : "1.125rem",
                           color: hasUserMinted ? "#f59e0b" : "#6b7280",
                         }}
                       >
@@ -1633,8 +1689,15 @@ export default function Home() {
                   </div>
                 </div>
               )}
+
               {isSoldOut && (
-                <div style={styles.soldOutBadge}>
+                <div
+                  style={{
+                    ...styles.soldOutBadge,
+                    fontSize: isMobile ? "0.9rem" : "1rem",
+                    padding: isMobile ? "0.6rem 1rem" : "0.75rem 1.5rem",
+                  }}
+                >
                   🔥 SOLD OUT - All {maxSupply} NFTs Minted!
                 </div>
               )}
@@ -1648,19 +1711,34 @@ export default function Home() {
                     }
                     style={{
                       ...styles.mintButton,
-                      ...(isLoading || isSoldOut || !isWhitelisted
+                      ...(isLoading ||
+                      isSoldOut ||
+                      !isWhitelisted ||
+                      hasUserMinted
                         ? styles.mintButtonDisabled
                         : {}),
+                      fontSize: isMobile ? "1rem" : "1.125rem",
+                      padding: isMobile ? "1rem 1.5rem" : "1.25rem 2rem",
                     }}
                     onMouseOver={(e: any) => {
-                      if (!isLoading && !isSoldOut && isWhitelisted) {
+                      if (
+                        !isLoading &&
+                        !isSoldOut &&
+                        isWhitelisted &&
+                        !hasUserMinted
+                      ) {
                         e.target.style.transform = "translateY(-2px)";
                         e.target.style.boxShadow =
                           "0 20px 40px rgba(37, 99, 235, 0.4)";
                       }
                     }}
                     onMouseOut={(e: any) => {
-                      if (!isLoading && !isSoldOut && isWhitelisted) {
+                      if (
+                        !isLoading &&
+                        !isSoldOut &&
+                        isWhitelisted &&
+                        !hasUserMinted
+                      ) {
                         e.target.style.transform = "translateY(0)";
                         e.target.style.boxShadow = "none";
                       }
@@ -1678,12 +1756,17 @@ export default function Home() {
                   </button>
                 </div>
               ) : (
-                <div style={styles.connectSection}>
+                <div
+                  style={{
+                    ...styles.connectSection,
+                    padding: isMobile ? "1rem" : "2rem",
+                  }}
+                >
                   <p
                     style={{
                       color: "#9ca3af",
                       marginBottom: "2rem",
-                      fontSize: "1.125rem",
+                      fontSize: isMobile ? "1rem" : "1.125rem",
                     }}
                   >
                     Connect your wallet to check whitelist status
@@ -1692,7 +1775,7 @@ export default function Home() {
                     style={{
                       backgroundColor: "rgba(55, 65, 81, 0.8)",
                       borderRadius: "1rem",
-                      padding: "1.5rem",
+                      padding: isMobile ? "1rem" : "1.5rem",
                       border: "1px solid rgba(75, 85, 99, 0.5)",
                       backdropFilter: "blur(10px)",
                       display: "inline-block",
@@ -1704,8 +1787,20 @@ export default function Home() {
               )}
 
               {status && (
-                <div style={getStatusStyle()}>
-                  <p style={{ margin: 0, fontSize: "1rem" }}>{status}</p>
+                <div
+                  style={{
+                    ...getStatusStyle(),
+                    padding: isMobile ? "1rem" : "1.25rem",
+                  }}
+                >
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: isMobile ? "0.9rem" : "1rem",
+                    }}
+                  >
+                    {status}
+                  </p>
                 </div>
               )}
             </div>
