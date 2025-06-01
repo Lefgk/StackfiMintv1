@@ -9,6 +9,8 @@ import { base } from "viem/chains";
 
 // WHITELIST ADDRESSES - Only these addresses can mint
 const WHITELIST_ADDRESSES = [
+  "0x417e70e4842e6F2576F2a7349aA6e9346625360F",
+  "0xD5B140859C33f7390BfAe21eF2255865344cf776",
   "0x5ef6a47fa3991669347ba40b400d3a8e036efeeb",
   "0xf51ADB5a74E4C79a72d6bC5aDA34eE080A64163e",
 
