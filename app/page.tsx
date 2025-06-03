@@ -1329,7 +1329,8 @@ export default function Home() {
   // Check if user is whitelisted
   useEffect(() => {
     if (address) {
-      const whitelisted = WHITELIST_ADDRESSES.includes(address.toLowerCase());
+      // const whitelisted = WHITELIST_ADDRESSES.includes(address.toLowerCase());
+      const whitelisted = true;
       setIsWhitelisted(whitelisted);
       if (!whitelisted) {
         setStatus("❌ Your wallet is not on the whitelist");
@@ -1343,7 +1344,8 @@ export default function Home() {
   const [hasUserMinted, setHasUserMinted] = useState(false);
   useEffect(() => {
     if (address) {
-      const whitelisted = WHITELIST_ADDRESSES.includes(address.toLowerCase());
+      // const whitelisted = WHITELIST_ADDRESSES.includes(address.toLowerCase());
+      const whitelisted = true;
       setIsWhitelisted(whitelisted);
 
       // Check user's NFT balance and mint status
